@@ -2,6 +2,7 @@ from flask import Flask, request
 from bs4 import BeautifulSoup
 import urllib.request
 import requests
+from google import search
 
 app = Flask(__name__)
 
@@ -24,6 +25,16 @@ def getVideoTitle():
 
 	print(videoTitle)
 	return videoTitle
+
+@app.route("/google")
+def google():
+	keyword = request.args.get("key")
+	resultArray = []
+	for url in search(keyword, tld='com.pk', lang='es', stop=5):
+		print(url)
+		resultArray.append(url)
+
+	return ", ".join(resultArray)
 
 if __name__ == '__main__':
         app.run()
