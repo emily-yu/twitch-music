@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import urllib.request
 import requests
 from google import search
+from urllib.parse import urlparse
 
 app = Flask(__name__)
 
@@ -30,9 +31,10 @@ def getVideoTitle():
 def google():
 	keyword = request.args.get("key")
 	resultArray = []
-	for url in search(keyword, tld='com.pk', lang='es', stop=5):
-		print(url)
-		resultArray.append(url)
+	for url in search(keyword, tld='com.pk', lang='es', stop=20):
+		if (urlparse(url).hostname == "www.animelyrics.com"):
+			resultArray.append(url)
+			print(url)
 
 	return ", ".join(resultArray)
 
