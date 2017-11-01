@@ -39,9 +39,9 @@ def getVideoTitle():
 # google and extract lyrics
 @app.route("/google")
 def google():
-	# keyword = request.args.get("key")
+	keyword = request.args.get("key")
 	resultArray = []
-	for url in search("catch the moment", tld='com.pk', lang='es', stop=20):
+	for url in search(keyword, tld='com.pk', lang='es', stop=20):
 		if (urlparse(url).hostname == "www.animelyrics.com"):
 			resultArray.append(url)
 			print(url)
