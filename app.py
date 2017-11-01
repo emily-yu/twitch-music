@@ -7,6 +7,15 @@ from urllib.parse import urlparse
 
 app = Flask(__name__)
 
+def find_between( s, first, last ):
+    try:
+        start = s.index( first ) + len( first )
+        end = s.index( last, start )
+        return s[start:end]
+    except ValueError:
+        return ""
+
+# extract video title from youtube link
 @app.route("/videoTitle")
 def getVideoTitle():
 	# get url
@@ -27,11 +36,12 @@ def getVideoTitle():
 	print(videoTitle)
 	return videoTitle
 
+# google and extract lyrics
 @app.route("/google")
 def google():
 	# keyword = request.args.get("key")
 	resultArray = []
-	for url in search("caste room", tld='com.pk', lang='es', stop=20):
+	for url in search("catch the moment", tld='com.pk', lang='es', stop=20):
 		if (urlparse(url).hostname == "www.animelyrics.com"):
 			resultArray.append(url)
 			print(url)
@@ -41,33 +51,51 @@ def google():
 	html = requests.get(url)
 	soup = BeautifulSoup(html.text, 'html5lib')
 
-	# ---------------------------------------------------- TABLES WITH TRANSLATIONS----------------------------------------------------
-	# remove br and dt tags
-	for linebreak in soup.find_all('br'):
-	    linebreak.extract()
-	for line in soup.find_all('dt'):
-	    line.extract()
-	print(soup.prettify())
-
-	# only use this for double table lines
-	mydivs = soup.findAll("td", {
-		"class" : "romaji"
+	tdSearch = soup.findAll("td", {
+		"class" : "translation"
 		});
-	print("same")
-	print(mydivs)
-	# ---------------------------------------------------------------------------------------------------------------------------------
+	# print(mydivs)
+	count = 0
+	for element in tdSearch:
+		count = count + 1
 
+	print(count)
 	lyrics = []
-	for x in mydivs:
-	    print("-------------------------------------------------------------------------------------------------------------")
-	    print(x.text)
-	    lyrics.append(x.text.replace("\xa0", " "))
+	if count == 0:
+		print("single table")
+		# --------------------- TABLES WITH TRANSLATIONS ---------------------
+		print("---------------------------------------------------------------")
+		result = find_between(soup.text, "Lyrics from Animelyrics.com", "Transliterated")
+		lyrics.append(result.replace("\xa0", " "))
+		# --------------------------------------------------------------------
+
+	else:
+		print("double table")
+		print("---------------------------------------------------------------")
+		# --------------------- TABLES WITH TRANSLATIONS ---------------------
+		for linebreak in soup.find_all('br'):
+		    linebreak.extract()
+		for line in soup.find_all('dt'):
+		    line.extract()
+		# print(soup.prettify())
+
+		mydivs = soup.findAll("td", {
+			"class" : "romaji"
+			});
+		# print("same")
+		# print(mydivs)
+
+		for x in mydivs:
+			# print(x.text)
+			lyrics.append(x.text.replace("\xa0", " "))
+		# --------------------------------------------------------------------
 
 	# lyrics for song
 	print(lyrics)
 
 	return ", ".join(resultArray)
 
+# get twitch chat messages
 @app.route("/getMessages")
 def get():
 	# channelName = request.args.get("channelName")
