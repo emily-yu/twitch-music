@@ -29,14 +29,59 @@ def getVideoTitle():
 
 @app.route("/google")
 def google():
-	keyword = request.args.get("key")
+	# keyword = request.args.get("key")
 	resultArray = []
-	for url in search(keyword, tld='com.pk', lang='es', stop=20):
+	for url in search("caste room", tld='com.pk', lang='es', stop=20):
 		if (urlparse(url).hostname == "www.animelyrics.com"):
 			resultArray.append(url)
 			print(url)
 
+	url = resultArray[0]
+	# url = "http://www.animelyrics.com/anime/sao/catchthemoment.htm"
+	html = requests.get(url)
+	soup = BeautifulSoup(html.text, 'html5lib')
+
+	# ---------------------------------------------------- TABLES WITH TRANSLATIONS----------------------------------------------------
+	# remove br and dt tags
+	for linebreak in soup.find_all('br'):
+	    linebreak.extract()
+	for line in soup.find_all('dt'):
+	    line.extract()
+	print(soup.prettify())
+
+	# only use this for double table lines
+	mydivs = soup.findAll("td", {
+		"class" : "romaji"
+		});
+	print("same")
+	print(mydivs)
+	# ---------------------------------------------------------------------------------------------------------------------------------
+
+	lyrics = []
+	for x in mydivs:
+	    print("-------------------------------------------------------------------------------------------------------------")
+	    print(x.text)
+	    lyrics.append(x.text.replace("\xa0", " "))
+
+	# lyrics for song
+	print(lyrics)
+
 	return ", ".join(resultArray)
+
+@app.route("/getMessages")
+def get():
+	# channelName = request.args.get("channelName")
+	channelName = "shiphtur"
+	r = requests.get("https://www.twitch.tv/" + channelName)
+	soup = BeautifulSoup(r.text, 'html.parser')
+	print(soup.prettify())
+	mydivs = soup.findAll("span", {
+		"class" : "message"
+		});
+	print(mydivs)
+	for divs in mydivs:
+		print(divs)
+	return "Sae,"
 
 if __name__ == '__main__':
         app.run()
