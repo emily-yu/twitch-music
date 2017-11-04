@@ -13,31 +13,47 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 
 import threading
+from threading import Thread, Lock, Event
 
-# retrieve element messages from chat
-def findMesssages(html):
-    # looping
-    threading.Timer(5.0, findMesssages, [html])
+from TwitchChat import TwitchChat
+# from TwitchChat import MyThread
 
-    # check for messages
-    soup = BeautifulSoup(html.get_attribute("innerHTML"), 'html.parser')
-    mydivs = soup.findAll("span", {
-        "class" : "message"
-    });
-    print(mydivs)
-    for divs in mydivs:
-        # print(divs)
-        print("CONTENT:")
-        print(divs.get_text().strip())
+# # retrieve element messages from chat
+# def findMesssages(html):
+#     # looping
+#     threading.Timer(5.0, findMesssages, [html])
 
-# start up client
-def initBot():
-    channel = "shiphtur"
-    driver = webdriver.Chrome()
-    driver.get("https://www.twitch.tv/" + channel + "/chat")
+#     # check for messages
+#     soup = BeautifulSoup(html.get_attribute("innerHTML"), 'html.parser')
+#     mydivs = soup.findAll("span", {
+#         "class" : "message"
+#     });
+#     print(mydivs)
+#     for divs in mydivs:
+#         # print(divs)
+#         print("CONTENT:")
+#         print(divs.get_text().strip())
 
-    wait = WebDriverWait(driver, 100)
-    h3 = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "body.ember-application")))
-    findMesssages(h3)
+# # start up client
+# def initBot():
+#     channel = "shiphtur"
+#     driver = webdriver.Chrome()
+#     driver.get("https://www.twitch.tv/" + channel + "/chat")
 
-initBot()
+#     wait = WebDriverWait(driver, 100)
+#     h3 = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "body.ember-application")))
+#     findMesssages(h3)
+
+# initBot()
+
+stop = Event()
+tc = TwitchChat(stop, "shiphtur")
+tc.start();
+tc.stop()
+
+# stopFlag = Event()
+# thread = MyThread(stopFlag)
+# thread.start()
+
+# this will stop the timer
+# stopFlag.set()
