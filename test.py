@@ -12,51 +12,32 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 
-def find_between( s, first, last ):
-    try:
-        start = s.index( first ) + len( first )
-        end = s.index( last, start )
-        return s[start:end]
-    except ValueError:
-        return ""
+import threading
 
-def find_between_r( s, first, last ):
-    try:
-        start = s.rindex( first ) + len( first )
-        end = s.rindex( last, start )
-        return s[start:end]
-    except ValueError:
-        return ""
+# retrieve element messages from chat
+def findMesssages(html):
+    # looping
+    threading.Timer(5.0, findMesssages, [html])
 
-# browser = webdriver.Firefox()
-# browser.get("https://www.twitch.tv/shiphtur/chat")
-# delay = 3 # seconds
-driver = webdriver.Firefox()
-driver.get("http://somedomain/url_that_delays_loading")
-try:
-    element = WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located((By.CLASS, "message"))
-    )
-finally:
-    driver.quit()
+    # check for messages
+    soup = BeautifulSoup(html.get_attribute("innerHTML"), 'html.parser')
+    mydivs = soup.findAll("span", {
+        "class" : "message"
+    });
+    print(mydivs)
+    for divs in mydivs:
+        # print(divs)
+        print("CONTENT:")
+        print(divs.get_text().strip())
 
-# # remove br and dt tags
-# for linebreak in soup.find_all('br'):
-#     linebreak.extract()
-# for line in soup.find_all('dt'):
-#     line.extract()
-# print(soup.prettify())
+# start up client
+def initBot():
+    channel = "shiphtur"
+    driver = webdriver.Chrome()
+    driver.get("https://www.twitch.tv/" + channel + "/chat")
 
-# mydivs = soup.findAll("td", {
-# 	"class" : "romaji"
-# 	});
-# print("same")
-# print(mydivs)
+    wait = WebDriverWait(driver, 100)
+    h3 = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "body.ember-application")))
+    findMesssages(h3)
 
-# lyrics = []
-# for x in mydivs:
-#     print("-------------------------------------------------------------------------------------------------------------")
-#     print(x.text)
-#     lyrics.append(x.text.replace("\xa0", " "))
-
-# print(paragraphs)
+initBot()
