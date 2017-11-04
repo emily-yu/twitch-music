@@ -4,6 +4,7 @@ import urllib.request
 import requests
 from google import search
 from urllib.parse import urlparse
+from animelyrics import AnimeLyrics
 
 app = Flask(__name__)
 
@@ -41,57 +42,8 @@ def getVideoTitle():
 def google():
 	keyword = request.args.get("key")
 	resultArray = []
-	for url in search(keyword, tld='com.pk', lang='es', stop=20):
-		if (urlparse(url).hostname == "www.animelyrics.com"):
-			resultArray.append(url)
-			print(url)
-
-	url = resultArray[0]
-	# url = "http://www.animelyrics.com/anime/sao/catchthemoment.htm"
-	html = requests.get(url)
-	soup = BeautifulSoup(html.text, 'html5lib')
-
-	tdSearch = soup.findAll("td", {
-		"class" : "translation"
-		});
-	# print(mydivs)
-	count = 0
-	for element in tdSearch:
-		count = count + 1
-
-	print(count)
-	lyrics = []
-	if count == 0:
-		print("single table")
-		# --------------------- TABLES WITH TRANSLATIONS ---------------------
-		print("---------------------------------------------------------------")
-		result = find_between(soup.text, "Lyrics from Animelyrics.com", "Transliterated")
-		lyrics.append(result.replace("\xa0", " "))
-		# --------------------------------------------------------------------
-
-	else:
-		print("double table")
-		print("---------------------------------------------------------------")
-		# --------------------- TABLES WITH TRANSLATIONS ---------------------
-		for linebreak in soup.find_all('br'):
-		    linebreak.extract()
-		for line in soup.find_all('dt'):
-		    line.extract()
-		# print(soup.prettify())
-
-		mydivs = soup.findAll("td", {
-			"class" : "romaji"
-			});
-		# print("same")
-		# print(mydivs)
-
-		for x in mydivs:
-			# print(x.text)
-			lyrics.append(x.text.replace("\xa0", " "))
-		# --------------------------------------------------------------------
-
-	# lyrics for song
-	print(lyrics)
+	al = AnimeLyrics(keyword)
+	resultArray = al.lyrics("jp")
 
 	return ", ".join(resultArray)
 
