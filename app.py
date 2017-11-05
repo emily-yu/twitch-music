@@ -47,21 +47,5 @@ def google():
 
 	return ", ".join(resultArray)
 
-# get twitch chat messages
-@app.route("/getMessages")
-def get():
-	# channelName = request.args.get("channelName")
-	channelName = "shiphtur"
-	r = requests.get("https://www.twitch.tv/" + channelName)
-	soup = BeautifulSoup(r.text, 'html.parser')
-	print(soup.prettify())
-	mydivs = soup.findAll("span", {
-		"class" : "message"
-		});
-	print(mydivs)
-	for divs in mydivs:
-		print(divs)
-	return "Sae,"
-
 if __name__ == '__main__':
         app.run()

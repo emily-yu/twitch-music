@@ -16,44 +16,14 @@ import threading
 from threading import Thread, Lock, Event
 
 from TwitchChat import TwitchChat
-# from TwitchChat import MyThread
+from Youtube import VideoStats
 
-# # retrieve element messages from chat
-# def findMesssages(html):
-#     # looping
-#     threading.Timer(5.0, findMesssages, [html])
+# stop = Event()
+# tc = TwitchChat(stop, "oxstormthunder")
+# tc.start();
+# tc.stop()
 
-#     # check for messages
-#     soup = BeautifulSoup(html.get_attribute("innerHTML"), 'html.parser')
-#     mydivs = soup.findAll("span", {
-#         "class" : "message"
-#     });
-#     print(mydivs)
-#     for divs in mydivs:
-#         # print(divs)
-#         print("CONTENT:")
-#         print(divs.get_text().strip())
-
-# # start up client
-# def initBot():
-#     channel = "shiphtur"
-#     driver = webdriver.Chrome()
-#     driver.get("https://www.twitch.tv/" + channel + "/chat")
-
-#     wait = WebDriverWait(driver, 100)
-#     h3 = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "body.ember-application")))
-#     findMesssages(h3)
-
-# initBot()
-
-stop = Event()
-tc = TwitchChat(stop, "shiphtur")
-tc.start();
-tc.stop()
-
-# stopFlag = Event()
-# thread = MyThread(stopFlag)
-# thread.start()
-
-# this will stop the timer
-# stopFlag.set()
+ytv = VideoStats("https://www.youtube.com/watch?v=m8MfJg68oCs")
+print(ytv.title())
+print(ytv.duration())
+ytv.open()
