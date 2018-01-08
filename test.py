@@ -22,46 +22,92 @@ from animelyrics import AnimeLyrics
 from itertools import product
 import itertools
 
+from tkinter import *
+
 # stop = Event()
 # tc = TwitchChat(stop, "oxstormthunder")
 # tc.start();
 # tc.stop()
-def google(keyword):
-	# keyword = request.args.get("key")
-	resultArray = []
-	al = AnimeLyrics(keyword)
-	resultArray = al.lyrics("jp")
 
-	return (resultArray)
+# def google(keyword):
+# 	# keyword = request.args.get("key")
+# 	resultArray = []
+# 	al = AnimeLyrics(keyword)
+# 	resultArray = al.lyrics("jp")
 
-def isEnglish(s):
-    try:
-        s.encode(encoding='utf-8').decode('ascii')
-    except UnicodeDecodeError:
-        return False
-    else:
-        return True
+# 	return (resultArray)
 
-ytv = VideoStats("https://www.youtube.com/watch?v=4GPKYLabHv0")
-print(ytv.title())
-permutation = ytv.title().split()
-print(permutation)
-for word in permutation:
-	if (isEnglish(word) == False):
-		permutation.remove(word)
+# def isEnglish(s):
+#     try:
+#         s.encode(encoding='utf-8').decode('ascii')
+#     except UnicodeDecodeError:
+#         return False
+#     else:
+#         return True
 
-keywords = [''.join(i) for i in itertools.product(permutation, repeat = 3)]
+# ytv = VideoStats("https://www.youtube.com/watch?v=4GPKYLabHv0")
+# print(ytv.title())
+# print(google("black bullet lyrics"))
+# print(google(ytv.title() + "lyrics"))
+# permutation = ytv.title().split()
+# print(permutation)
+# for word in permutation:
+# 	if (isEnglish(word) == False):
+# 		permutation.remove(word)
 
-for key in keywords:
-	print(key)
-	try: 
-		print(google(key + "lyrics"))
-	except AttributeError:
-		print("none")
-	else:
-		# break;
-		print("same")
+# keywords = [''.join(i) for i in itertools.product(permutation, repeat = 3)]
+
+# for key in keywords:
+# 	print(key)
+# 	try: 
+# 		print(google(key + "lyrics"))
+# 	except AttributeError:
+# 		print("none")
+# 	else:
+# 		# break;
+# 		print("same")
 
 
 # print(ytv.duration())
 # ytv.open()
+
+
+
+
+# gui
+class Application(Frame):
+    def next(self, master = None):
+        print("TODO: generate preview of thing")
+        Frame.__init__(self, master)
+        self.pack()
+        self.addLabel("same")
+
+    def createWidgets(self):
+        self.QUIT = Button(self)
+        self.QUIT["text"] = "QUIT"
+        self.QUIT["fg"]   = "red"
+        self.QUIT["command"] =  self.quit
+
+        self.QUIT.pack({"side": "left"})
+
+        self.hi_there = Button(self)
+        self.hi_there["text"] = "PAUSE",
+        self.hi_there["command"] = self.next
+
+        self.hi_there.pack({"side": "left"})
+
+    def addLabel(self, text):
+        self.label = Label(self)
+        self.label["text"] = text
+        self.label["fg"]   = "red"
+        self.label.pack({"side": "left"})
+
+    def __init__(self, master=None):
+        Frame.__init__(self, master)
+        self.pack()
+        self.createWidgets()
+
+root = Tk()
+app = Application(master=root)
+app.mainloop()
+root.destroy()
