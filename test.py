@@ -22,12 +22,7 @@ from animelyrics import AnimeLyrics
 from itertools import product
 import itertools
 
-from tkinter import *
-
-# stop = Event()
-# tc = TwitchChat(stop, "oxstormthunder")
-# tc.start();
-# tc.stop()
+from tkinter import messagebox, Frame, Tk, Button, Scrollbar, Text, RIGHT, Y, LEFT, END
 
 # def google(keyword):
 # 	# keyword = request.args.get("key")
@@ -76,38 +71,92 @@ from tkinter import *
 
 # gui
 class Application(Frame):
-    def next(self, master = None):
-        print("TODO: generate preview of thing")
-        Frame.__init__(self, master)
-        self.pack()
-        self.addLabel("same")
+	def newRequest(self, master = None):
+		print("TODO: generate preview of thing")
+		self.addLabel("same")
 
-    def createWidgets(self):
-        self.QUIT = Button(self)
-        self.QUIT["text"] = "QUIT"
-        self.QUIT["fg"]   = "red"
-        self.QUIT["command"] =  self.quit
+	def createWidgets(self):
+		self.QUIT = Button(self)
+		self.QUIT["text"] = "QUIT"
+		self.QUIT["fg"]   = "red"
+		self.QUIT["command"] =  self.quit
 
-        self.QUIT.pack({"side": "left"})
+		self.QUIT.pack({"side": "left"})
 
-        self.hi_there = Button(self)
-        self.hi_there["text"] = "PAUSE",
-        self.hi_there["command"] = self.next
+		self.hi_there = Button(self)
+		self.hi_there["text"] = "PAUSE",
+		self.hi_there["command"] = self.newRequest
 
-        self.hi_there.pack({"side": "left"})
+		self.hi_there.pack({"side": "left"})
 
-    def addLabel(self, text):
-        self.label = Label(self)
-        self.label["text"] = text
-        self.label["fg"]   = "red"
-        self.label.pack({"side": "left"})
+	def addLabel(self, text, master = None):
+		Frame.__init__(self, master)
+		self.pack()
+		self.label = Label(self)
+		self.label["text"] = text
+		self.label["fg"]   = "red"
+		self.label.pack({"side": "left"})
 
-    def __init__(self, master=None):
-        Frame.__init__(self, master)
-        self.pack()
-        self.createWidgets()
+	def scrollText(self, master = None):
+		Frame.__init__(self, master)
+		self.pack()
+		S=Scrollbar(self)
+		T=Text(self, height=20, width=50)
+		S.pack(side=RIGHT, fill=Y)
+		T.pack(side=LEFT, fill=Y)
+		S.config(command=T.yview)
+		T.config(yscrollcommand=S.set)
+		quote = """
+sotto  hakidasu  tameiki wo suikonda  koukai wa nigai aji nokoshite 
+itsumo  nande?  kanjin na koto ienai mama  tsugi no asahi ga kao dashiteru
+
+iya ni natta unmei wo  NAIFU de kirikizande 
+mou ichido yarinaoshitara  kimi ni deaenai kamo
+
+boku no koe ga hibiita toki ni hajimaru  inochi no RIMITTO  shinzou ga KAUNTO shiteru 
+kanaete mo kanaete mo  owaranai negai 
+ase wo kaite hashitta  sekai no byoushin wa  itsuka tomatta boku wo oite yuku 
+ato nankai kimi to waraeru no? 
+tameshiterunda  boku wo  Catch the Moment
+
+ikko shiawase wo kazoeru tabi ni  kawatteiku mirai ni obiete shimau kedo
+
+aijou no tane wo taisetsu ni sodateyou 
+buatsui kumo mo  yagate tsukiyaburu kana
+
+kimi no koe ga hibiita  boku no zenshin wo kayotte  shinzou no DOA wo NOKKU shiteru 
+"Okubyou" demo akechaunda yo  shinjitai kara 
+nan ni mo to omotta hazu no ashimoto ni  itsuka fukaku tashika na ne wo hayasu 
+arashi no yoru ga kita to shite mo  yuraidari wa shinai
+
+nando demo 
+oitsuitari  oikoshitari  kimi ga fui ni wakannaku natte 
+iki wo shita TAIMINGU ga au dake de  ureshiku nattari shite 
+atsumeta ichibyou wo  eien ni shite ikeru kana
+
+boku no koe ga hibiita toki ni hajimaru  inochi no RIMITTO  shinzou ga KAUNTO shiteru 
+kanaete mo kanaete mo  owaranai negai 
+ase wo kaite hashitta  sekai no byoushin ga  itsuka tomatta boku wo oite yuku 
+ato nankai kimi to waraeru no? 
+tameshiterunda  boku wo  Catch the Moment
+
+nogasanai yo  boku wa 
+kono toki wo tsukame  Catch the Moment
+		"""
+		T.insert(END, quote)
+
+	def __init__(self, master=None):
+		Frame.__init__(self, master)
+		self.pack()
+		self.createWidgets()
+		self.scrollText()
 
 root = Tk()
 app = Application(master=root)
 app.mainloop()
 root.destroy()
+
+stop = Event()
+tc = TwitchChat(stop, "oxstormthunder")
+tc.start();
+tc.stop()
