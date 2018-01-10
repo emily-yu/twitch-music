@@ -55,3 +55,5 @@ class TwitchChat(Thread):
     def stop(self):
         print("stopped?")
         self.stopped.set()
+
+        

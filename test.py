@@ -22,7 +22,7 @@ from animelyrics import AnimeLyrics
 from itertools import product
 import itertools
 
-from tkinter import messagebox, Frame, Tk, Button, Scrollbar, Text, RIGHT, Y, LEFT, END
+from tkinter import messagebox, Frame, Tk, Button, Scrollbar, Text, RIGHT, Y, LEFT, END, Label
 
 # def google(keyword):
 # 	# keyword = request.args.get("key")
@@ -153,10 +153,11 @@ kono toki wo tsukame  Catch the Moment
 
 root = Tk()
 app = Application(master=root)
+# app.addLabel("text")
 app.mainloop()
 root.destroy()
 
-stop = Event()
-tc = TwitchChat(stop, "oxstormthunder")
-tc.start();
-tc.stop()
+# stop = Event()
+# tc = TwitchChat(stop, "oxstormthunder")
+# tc.start();
+# tc.stop()
