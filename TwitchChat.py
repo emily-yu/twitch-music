@@ -24,17 +24,24 @@ class TwitchChat(Thread):
         twitchDriver.execute_script(script, node, "<div class = 'music-queuer'>\
                                                         <p class = 'music-queuer-header' style = 'position: absolute;top: 20px;right: 20px;'>Music Queue</p>\
                                                     </div>")
-        self.addSong("test", twitchDriver)
+        # self.addSong("test", twitchDriver)
+        # self.addSong("test2", twitchDriver)
+        # self.addSong("test3", twitchDriver)
 
     def addSong(self, text, twitchDriver):
+        node2 = twitchDriver.find_elements_by_xpath("/html/body/div[@class='music-queuer']/p")
+        if len(node2) > 1:
+            topStyle = int(node2[1].value_of_css_property("top")[:-2]) + 20
+        else: 
+            topStyle = int(node2[0].value_of_css_property("top")[:-2]) + 20
+
         node = twitchDriver.find_element_by_xpath("/html/body/div/p[@class='music-queuer-header']")
         script = "arguments[0].insertAdjacentHTML('afterEnd', arguments[1])"
-        twitchDriver.execute_script(script, node, "\
-                                                        <p style = 'position: absolute; top: 40px; right: 20px'>Music Queuasdfadfe</p>\
-                                                    ")
+
+        twitchDriver.execute_script(script, node, "<p style = 'position: absolute; top: " + str(topStyle) + "px; right: 20px'>" + text + "</p>")
 
     # retrieve element messages from chat
-    def findMesssages(self, html):
+    def findMesssages(self, html, twitchDriver):
         soup = BeautifulSoup(html.get_attribute("innerHTML"), 'html.parser')
         mydivs = soup.findAll("span", {
             "class" : "message"
@@ -64,10 +71,10 @@ class TwitchChat(Thread):
         h3 = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "body.ember-application")))
 
         # start loop
-        self.findMesssages(h3)
         self.injectUI(twitchDriver)
+        self.findMesssages(h3, twitchDriver)
         while not self.stopped.wait(5.0):
-            self.findMesssages(h3)
+            self.findMesssages(h3, twitchDriver)
 
     # stop loop
     def stop(self):
