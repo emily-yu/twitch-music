@@ -60,6 +60,7 @@ class TwitchChat(Thread):
                     # "Do nothing"
                     print()
                     self.queue.append((re.findall(r'(https?://[^\s]+)', divs.get_text().strip())))
+                    self.addSong(divs.get_text().strip(), twitchDriver)
                     print(self.queue)
 
     # start up client
