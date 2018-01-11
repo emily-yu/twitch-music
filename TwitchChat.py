@@ -16,6 +16,23 @@ class TwitchChat(Thread):
         self.stopped = event
         self.queue = []
 
+    # create queue
+    def injectUI(self, twitchDriver):
+        print("suddenly i wonder why i used python lmao")
+        node = twitchDriver.find_element_by_xpath("/html/body")
+        script = "arguments[0].insertAdjacentHTML('afterEnd', arguments[1])"
+        twitchDriver.execute_script(script, node, "<div class = 'music-queuer'>\
+                                                        <p class = 'music-queuer-header' style = 'position: absolute;top: 20px;right: 20px;'>Music Queue</p>\
+                                                    </div>")
+        self.addSong("test", twitchDriver)
+
+    def addSong(self, text, twitchDriver):
+        node = twitchDriver.find_element_by_xpath("/html/body/div/p[@class='music-queuer-header']")
+        script = "arguments[0].insertAdjacentHTML('afterEnd', arguments[1])"
+        twitchDriver.execute_script(script, node, "\
+                                                        <p style = 'position: absolute; top: 40px; right: 20px'>Music Queuasdfadfe</p>\
+                                                    ")
+
     # retrieve element messages from chat
     def findMesssages(self, html):
         soup = BeautifulSoup(html.get_attribute("innerHTML"), 'html.parser')
@@ -48,6 +65,7 @@ class TwitchChat(Thread):
 
         # start loop
         self.findMesssages(h3)
+        self.injectUI(twitchDriver)
         while not self.stopped.wait(5.0):
             self.findMesssages(h3)
 
@@ -56,4 +74,4 @@ class TwitchChat(Thread):
         print("stopped?")
         self.stopped.set()
 
-        
+

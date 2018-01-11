@@ -75,17 +75,24 @@ class Application(Frame):
 		print("TODO: generate preview of thing")
 		self.addLabel("same")
 
-	def createWidgets(self):
-		self.QUIT = Button(self)
-		self.QUIT["text"] = "QUIT"
-		self.QUIT["fg"]   = "red"
-		self.QUIT["command"] =  self.quit
+	def start(self):
+		stop = Event()
+		tc = TwitchChat(stop, "oxstormthunder")
+		tc.start();
+		tc.stop()
+		print("hahah it work")
 
-		self.QUIT.pack({"side": "left"})
+	def createWidgets(self, text, function):
+		# self.QUIT = Button(self)
+		# self.QUIT["text"] = "QUIT"
+		# self.QUIT["fg"]   = "red"
+		# self.QUIT["command"] =  self.quit
+
+		# self.QUIT.pack({"side": "left"})
 
 		self.hi_there = Button(self)
-		self.hi_there["text"] = "PAUSE",
-		self.hi_there["command"] = self.newRequest
+		self.hi_there["text"] = text,
+		self.hi_there["command"] = function
 
 		self.hi_there.pack({"side": "left"})
 
@@ -148,16 +155,17 @@ kono toki wo tsukame  Catch the Moment
 	def __init__(self, master=None):
 		Frame.__init__(self, master)
 		self.pack()
-		self.createWidgets()
+		self.createWidgets("START", self.start)
+		self.createWidgets("QUIT", self.quit)
 		self.scrollText()
 
-root = Tk()
-app = Application(master=root)
-# app.addLabel("text")
-app.mainloop()
-root.destroy()
+# root = Tk()
+# app = Application(master=root)
+# # app.addLabel("text")
+# app.mainloop()
+# root.destroy()
 
-# stop = Event()
-# tc = TwitchChat(stop, "oxstormthunder")
-# tc.start();
-# tc.stop()
+stop = Event()
+tc = TwitchChat(stop, "oxstormthunder")
+tc.start();
+tc.stop()
