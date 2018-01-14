@@ -39,7 +39,7 @@ class VideoStats:
 		print((int(m) * 60 + int(s)) + 10)
 		self.driver.quit()
 
-		return (int(m) * 60) + int(s) + 10
+		return (int(m) * 60) + int(s) + 5
 
 		# driver.close()
 

@@ -89,6 +89,7 @@ class TwitchChat(Thread):
         self.findMesssages(h3, twitchDriver)
         # while not self.stopped.wait(5.0):
 
+        queue_index = 0
         song_timer = 0
         while not self.musicStopped.wait(1.0):
             self.findMesssages(h3, twitchDriver)
@@ -96,12 +97,10 @@ class TwitchChat(Thread):
             print(song_timer)
             if len(self.queue) > 0 and song_timer < 1:
                 print("start new song: length of queue is more than 0 AND song_timer is not positive")
-                link = VideoStats(self.queue[0][0])
-                print(link.duration())
-                print(link.title())
-                print(link)
-                self.queue.remove(self.queue[0])
+                link = VideoStats(self.queue[queue_index][0])
+                youtubeDriver.get(self.queue[queue_index][0])
                 song_timer = link.duration()
+                queue_index = queue_index + 1
             elif len(self.queue) == 0 and song_timer < 1:
                 print("none in queue: length of queue is 0")
             else:
