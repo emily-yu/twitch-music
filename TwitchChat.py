@@ -9,14 +9,16 @@ from selenium.webdriver.common.keys import Keys
 import threading
 from threading import Thread, Lock, Event
 import re
+import time
 
 from Youtube import VideoStats
 
 class TwitchChat(Thread):
 
-    def __init__(self, event, channel):
+    def __init__(self, event, event2, channel):
         self.CHANNEL = channel
         self.stopped = event
+        self.musicStopped = event2
         self.queue = []
 
     # create queue
@@ -27,9 +29,6 @@ class TwitchChat(Thread):
         twitchDriver.execute_script(script, node, "<div class = 'music-queuer'>\
                                                         <p class = 'music-queuer-header' style = 'position: absolute;top: 15px;right: 20px;font-weight: bold'>MUSIC QUEUE</p>\
                                                     </div>")
-        # self.addSong("test", twitchDriver)
-        # self.addSong("test2", twitchDriver)
-        # self.addSong("test3", twitchDriver)
 
     def addSong(self, text, twitchDriver):
         node2 = twitchDriver.find_elements_by_xpath("/html/body/div[@class='music-queuer']/p")
@@ -71,6 +70,9 @@ class TwitchChat(Thread):
                     self.addSong(divs.get_text().strip(), twitchDriver)
                     print(self.queue)
 
+    def startMusic(self, driver, link):
+        driver.get(link)
+
     # start up client
     def start(self):
         twitchDriver = webdriver.Chrome()
@@ -85,8 +87,27 @@ class TwitchChat(Thread):
         # start loop
         self.injectUI(twitchDriver)
         self.findMesssages(h3, twitchDriver)
-        while not self.stopped.wait(5.0):
+        # while not self.stopped.wait(5.0):
+
+        song_timer = 0
+        while not self.musicStopped.wait(1.0):
             self.findMesssages(h3, twitchDriver)
+            print(len(self.queue))
+            print(song_timer)
+            if len(self.queue) > 0 and song_timer < 1:
+                print("start new song: length of queue is more than 0 AND song_timer is not positive")
+                link = VideoStats(self.queue[0][0])
+                print(link.duration())
+                print(link.title())
+                print(link)
+                self.queue.remove(self.queue[0])
+                song_timer = link.duration()
+            elif len(self.queue) == 0 and song_timer < 1:
+                print("none in queue: length of queue is 0")
+            else:
+                print("song_timer is positive?")
+                song_timer = song_timer - 1
+                print(song_timer)
 
     # stop loop
     def stop(self):

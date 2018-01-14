@@ -37,6 +37,9 @@ class VideoStats:
 		m, s = h3.get_attribute("innerHTML").split(':')
 		# duration to keep tab open
 		print((int(m) * 60 + int(s)) + 10)
+		self.driver.quit()
+
+		return (int(m) * 60) + int(s) + 10
 
 		# driver.close()
 

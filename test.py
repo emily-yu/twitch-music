@@ -166,6 +166,7 @@ kono toki wo tsukame  Catch the Moment
 # root.destroy()
 
 stop = Event()
-tc = TwitchChat(stop, "oxstormthunder")
+stop2 = Event()
+tc = TwitchChat(stop, stop2, "oxstormthunder")
 tc.start();
 tc.stop()
